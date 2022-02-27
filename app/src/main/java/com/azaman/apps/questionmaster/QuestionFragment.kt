@@ -35,7 +35,7 @@ class QuestionFragment : Fragment() {
     }
 
     private fun bindQuestion() {
-        var currentQuestion= arguments?.getInt(QUESTION_ID)
+        arguments?.getInt(QUESTION_ID)
             ?.let {
                 questionViewModelViewModel.getQuestion(it)
             }
@@ -45,9 +45,8 @@ class QuestionFragment : Fragment() {
             when(it.input_type){
                 "radio"-> bindRadio(it.option)
                 "option"-> bindOption(it.option)
-                "number"-> bindNumber(it.option)
                 else -> {
-
+                    bindNumber(it.option)
                 }
 
             }
@@ -95,27 +94,35 @@ class QuestionFragment : Fragment() {
 
    private fun createCheckBox(option: Option):CheckBox{
 
-        val radioButton2 = CheckBox(context)
-        radioButton2.layoutParams = LinearLayout.LayoutParams(
+        val checkBox = CheckBox(context)
+        checkBox.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        radioButton2.text=option.option_value
-        radioButton2.tag=option
-        radioButton2.id=option.id
-        return radioButton2;
+        checkBox.text=option.option_value
+        checkBox.tag=option
+        checkBox.id=option.id
+        checkBox.isChecked=option.isSelected
+        checkBox.setOnClickListener {
+            option.isSelected = !option.isSelected
+        }
+        return checkBox;
     }
 
     private fun createRadio(option: Option):RadioButton{
 
-        val radioButton2 = RadioButton(context)
-        radioButton2.layoutParams = LinearLayout.LayoutParams(
+        val button = RadioButton(context)
+        button.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        radioButton2.text=option.option_value
-        radioButton2.tag=option
-        radioButton2.id=option.id
-        return radioButton2;
+        button.text=option.option_value
+        button.tag=option
+        button.id=option.id
+        button.isChecked=option.isSelected
+        button.setOnClickListener {
+            option.isSelected=!option.isSelected
+        }
+        return button;
     }
 }

@@ -1,6 +1,7 @@
 package com.azaman.apps.questionmaster
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
@@ -22,6 +23,30 @@ class MainActivity : AppCompatActivity() {
             setQuestionFragment(it.id)
 
         })
+        questionViewModelViewModel.previousQestion.observe(this, Observer {
+
+           if(it==null){
+               binding.preButton.visibility=View.INVISIBLE
+           }
+            else
+           {
+               binding.preButton.visibility=View.VISIBLE
+           }
+
+        })
+
+        questionViewModelViewModel.nextQuestion.observe(this, Observer {
+
+            if(it==null){
+                binding.nextButton.visibility=View.INVISIBLE
+            }
+            else
+            {
+                binding.nextButton.visibility=View.VISIBLE
+            }
+
+        })
+
 
 
 

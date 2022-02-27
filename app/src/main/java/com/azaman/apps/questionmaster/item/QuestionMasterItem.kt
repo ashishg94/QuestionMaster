@@ -30,9 +30,12 @@ data class Option(
     val property_question_id:String,
     val image:String,
     val is_option:String,
-    val status: String,
+    var status: Int,
     val created_by:String,
     val updated_by:String,
     val created_at:String,
-    val updated_at:String
-)
+    val updated_at:String,
+    var isSelected:Boolean = false
+){
+
+}

@@ -29,8 +29,13 @@ class QuestionViewModel @Inject constructor(private val questionRepository: Ques
                 val indexOf = _allQuestions.value?.indexOf(
                     currentQuesion.value
                 )
-                if (indexOf != null && indexOf > -1) {
+                val size = _allQuestions.value?.size?:0
+                if (indexOf != null && indexOf > -1 && indexOf<size-1) {
                     nextQuestion.value = _allQuestions.value?.get(indexOf + 1)
+                }
+                else
+                {
+                    nextQuestion.value=null
                 }
             }
             else {
@@ -67,8 +72,8 @@ class QuestionViewModel @Inject constructor(private val questionRepository: Ques
     private val _allQuestions: MutableLiveData<List<QuestionMasterItem>> = MutableLiveData()
 
     val currentQuesion: MutableLiveData<QuestionMasterItem> = MutableLiveData<QuestionMasterItem>()
-    val nextQuestion: MutableLiveData<QuestionMasterItem> = MutableLiveData<QuestionMasterItem>()
-    val previousQestion: MutableLiveData<QuestionMasterItem> = MutableLiveData<QuestionMasterItem>()
+    val nextQuestion: MutableLiveData<QuestionMasterItem?> = MutableLiveData<QuestionMasterItem?>(null)
+    val previousQestion: MutableLiveData<QuestionMasterItem?> = MutableLiveData<QuestionMasterItem?>(null)
 
     fun getQuestion(questionId: Int): QuestionMasterItem? {
         _allQuestions.value?.forEach {
