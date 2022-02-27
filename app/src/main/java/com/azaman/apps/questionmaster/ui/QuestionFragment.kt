@@ -1,17 +1,17 @@
-package com.azaman.apps.questionmaster
+package com.azaman.apps.questionmaster.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.azaman.apps.questionmaster.QuestionViewModel.QuestionViewModel
 import com.azaman.apps.questionmaster.databinding.FragmentQuestionBinding
-import com.azaman.apps.questionmaster.item.Option
+import com.azaman.apps.questionmaster.model.Option
+import com.azaman.apps.questionmaster.viewmodel.QuestionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,7 +46,7 @@ class QuestionFragment : Fragment() {
                 "radio"-> bindRadio(it.option)
                 "option"-> bindOption(it.option)
                 else -> {
-                    bindNumber(it.option)
+                    bindNumber()
                 }
 
             }
@@ -55,7 +55,7 @@ class QuestionFragment : Fragment() {
 
     }
 
-    private fun bindNumber(option: List<Option>) {
+    private fun bindNumber() {
         binding.et.visibility=View.VISIBLE
     }
 
@@ -106,7 +106,7 @@ class QuestionFragment : Fragment() {
         checkBox.setOnClickListener {
             option.isSelected = !option.isSelected
         }
-        return checkBox;
+        return checkBox
     }
 
     private fun createRadio(option: Option):RadioButton{
@@ -123,6 +123,6 @@ class QuestionFragment : Fragment() {
         button.setOnClickListener {
             option.isSelected=!option.isSelected
         }
-        return button;
+        return button
     }
 }

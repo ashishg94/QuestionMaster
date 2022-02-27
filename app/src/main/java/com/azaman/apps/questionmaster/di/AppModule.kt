@@ -23,6 +23,7 @@ class AppModule {
             .baseUrl("https://uat.leaffintech.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
     @Provides
     fun providesApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
@@ -30,7 +31,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesOkHtpClient():OkHttpClient{
+    fun providesOkHtpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return OkHttpClient.Builder().addInterceptor(interceptor).build()

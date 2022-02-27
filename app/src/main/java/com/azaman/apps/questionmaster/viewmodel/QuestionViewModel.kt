@@ -1,22 +1,27 @@
-package com.azaman.apps.questionmaster.QuestionViewModel
+package com.azaman.apps.questionmaster.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azaman.apps.questionmaster.Repository.QuestionRepository
-import com.azaman.apps.questionmaster.item.QuestionMasterItem
+import com.azaman.apps.questionmaster.model.Question
+import com.azaman.apps.questionmaster.repository.QuestionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class QuestionViewModel @Inject constructor(private val questionRepository: QuestionRepository) :
     ViewModel() {
 
+    private val allQuestions: MutableLiveData<List<Question>> = MutableLiveData()
+    val currentQuesion: MutableLiveData<Question> = MutableLiveData<Question>()
+    val nextQuestion: MutableLiveData<Question?> = MutableLiveData<Question?>(null)
+    val previousQestion: MutableLiveData<Question?> = MutableLiveData<Question?>(null)
+
     init {
         questionRepository.getQuestionMasterItem().onEach {
-            _allQuestions.value = it
+            allQuestions.value = it
             previousQestion.value == null
             currentQuesion.value = it[0]
             assignNextQuestion()
@@ -24,59 +29,48 @@ class QuestionViewModel @Inject constructor(private val questionRepository: Ques
     }
 
     private fun assignNextQuestion() {
+        var nextQ: Question? = null
         currentQuesion.value?.next_question_id?.let {
             if (it.isEmpty()) {
-                val indexOf = _allQuestions.value?.indexOf(
+                val indexOf = allQuestions.value?.indexOf(
                     currentQuesion.value
                 )
-                val size = _allQuestions.value?.size?:0
-                if (indexOf != null && indexOf > -1 && indexOf<size-1) {
-                    nextQuestion.value = _allQuestions.value?.get(indexOf + 1)
+                val size = allQuestions.value?.size ?: 0
+                if (indexOf != null && indexOf > -1 && indexOf < size - 1) {
+                    nextQ = allQuestions.value?.get(indexOf + 1)
+
                 }
-                else
-                {
-                    nextQuestion.value=null
-                }
-            }
-            else {
-                nextQuestion.value = getQuestion(it.toInt())
+            } else {
+                nextQ = getQuestion(it.toInt())
             }
         }
+        nextQuestion.value = nextQ
+
     }
 
     private fun assignPrevious() {
-        var preQ: QuestionMasterItem? = null
+        var preQ: Question? = null
         currentQuesion.value?.id?.let { questionId ->
-            _allQuestions.value?.forEach {
+            allQuestions.value?.forEach {
                 if (it.next_question_id.isNotEmpty() && questionId == it.next_question_id.toInt()) {
                     preQ = it
                 }
             }
         }
         if (preQ == null) {
-
-            val indexOf = _allQuestions.value?.indexOf(
+            val indexOf = allQuestions.value?.indexOf(
                 currentQuesion.value
             )
             if (indexOf != null && indexOf > 0) {
-
-                preQ = _allQuestions.value?.get(indexOf - 1)
-
-
+                preQ = allQuestions.value?.get(indexOf - 1)
             }
         }
         previousQestion.value = preQ
     }
 
 
-    private val _allQuestions: MutableLiveData<List<QuestionMasterItem>> = MutableLiveData()
-
-    val currentQuesion: MutableLiveData<QuestionMasterItem> = MutableLiveData<QuestionMasterItem>()
-    val nextQuestion: MutableLiveData<QuestionMasterItem?> = MutableLiveData<QuestionMasterItem?>(null)
-    val previousQestion: MutableLiveData<QuestionMasterItem?> = MutableLiveData<QuestionMasterItem?>(null)
-
-    fun getQuestion(questionId: Int): QuestionMasterItem? {
-        _allQuestions.value?.forEach {
+    fun getQuestion(questionId: Int): Question? {
+        allQuestions.value?.forEach {
             if (it.id == questionId) {
                 return it
             }
