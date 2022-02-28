@@ -35,10 +35,6 @@ class QuestionFragment : Fragment() {
     }
 
     private fun bindQuestion() {
-        arguments?.getInt(QUESTION_ID)
-            ?.let {
-                questionViewModelViewModel.getQuestion(it)
-            }
 
         questionViewModelViewModel.currentQuesion.value?.let {
             binding.tvQuestion.text=it.question_english
@@ -80,13 +76,10 @@ class QuestionFragment : Fragment() {
     }
 
     companion object {
-
-        const val QUESTION_ID="questionId"
         @JvmStatic
-        fun newInstance(questionId: Int) =
+        fun newInstance() =
             QuestionFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(QUESTION_ID, questionId)
                 }
             }
     }

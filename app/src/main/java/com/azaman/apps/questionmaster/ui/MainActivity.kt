@@ -20,15 +20,14 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel=questionViewModelViewModel
         binding.lifecycleOwner=this
         questionViewModelViewModel.currentQuesion.observe(this) {
-            setQuestionFragment(it.id)
-
+            setQuestionFragment()
         }
     }
 
-    private fun setQuestionFragment(questionId: Int) {
+    private fun setQuestionFragment() {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
-            replace(R.id.container, QuestionFragment.newInstance(questionId))
+            replace(R.id.container, QuestionFragment.newInstance())
         }
     }
 }
